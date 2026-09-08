@@ -1,1 +1,0 @@
-# iga-homelab-midpoint-keycloak
