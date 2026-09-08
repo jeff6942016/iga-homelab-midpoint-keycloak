@@ -103,6 +103,13 @@ Keycloak.
 
 ## How It Works
 
+The pipeline runs as five containers on a single host, orchestrated with Docker Compose.
+
+Identities originate in a CSV file that stands in for an HR system. midPoint imports those records through the CSV connector, mapping source fields to identity attributes so it becomes the system of record. Access to the target directory is granted through roles rather than by hand, so assigning a role to a user triggers midPoint to construct and provision the matching LDAP account automatically.
+
+From there the lifecycle runs on its own. A new record provisions an account, an attribute change flows through to the directory, and a deactivation cascades to disable the downstream account, covering the full joiner, mover, and leaver cycle. midPoint then reconciles against the directory on a schedule: any account that exists in LDAP without a matching owner is flagged as unauthorized and remediated, which is the governance control that catches orphaned access.
+
+Finally, Keycloak federates the OpenLDAP directory as an identity provider, so a user who was provisioned from the original HR record can authenticate through single sign-on. That closes the loop from source record to working login.
 
 
 ## What I Learned
