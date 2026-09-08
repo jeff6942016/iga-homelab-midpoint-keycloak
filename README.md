@@ -101,11 +101,9 @@ Microsoft SC-300 (Identity and Access Administrator) certification.
 Ubuntu Server, Docker and Docker Compose, midPoint, OpenLDAP, phpLDAPadmin,
 Keycloak.
 
-## Build It Yourself
+## How It Works
 
-Full step-by-step build instructions, including the Docker Compose configuration,
-the directory seed, and every stage of the pipeline, are in
-[BUILD.md](./BUILD.md).
+
 
 ## What I Learned
 
