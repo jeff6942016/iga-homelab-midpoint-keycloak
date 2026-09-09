@@ -39,6 +39,21 @@ graph LR
     style LDAP fill:#bfb,stroke:#333,stroke-width:2px
     style KC fill:#fbf,stroke:#333,stroke-width:2px
 ```
+## Scale and Automation
+
+This lab runs a deliberately small dataset, but nothing about the design depends on
+that. The number of identities is a configuration detail, not an architectural one:
+the same connector, mappings, roles, and reconciliation tasks that govern a handful
+of users govern tens of thousands without changing shape, because every decision is
+driven by the authoritative source and by roles rather than by manual action.
+Ingestion is automated end to end. Records are pulled from the source, provisioning
+fires from role assignment, and reconciliation runs as a scheduled task rather than
+a one-off, so access is governed continuously rather than at a single point in time.
+In a real deployment the CSV is simply swapped for a live HR feed or directory, and
+the rest of the pipeline is unchanged. The point of the lab is the model, and the
+model is the one that scales.
+
+---
 
 | Component | Role |
 |-----------|------|
@@ -198,6 +213,25 @@ and attestation** to certify that standing access is still justified. Together t
 cover the full governance loop, from establishing identity to granting access to
 proving, over time, that the access is still warranted.
 
+## Defensive Value
+
+Identity governance is a defensive control set, and each stage of this pipeline
+closes a specific attack path. Orphaned and dormant accounts are among the most
+reliable footholds an attacker has, offering persistence and a route for lateral
+movement through access nobody is watching; reconciliation removes them by
+continuously comparing the directory against the source of truth. Excessive standing
+entitlements are what turn a single compromised account into a breach, since
+privilege escalation depends on there being privilege to seize; role-based least
+privilege and access review keep that surface small and force it to be re-justified
+over time. Slow deprovisioning leaves valid credentials in the hands of departed
+staff, one of the classic insider and credential-reuse risks; automated
+joiner-mover-leaver ends access the moment employment does. And because a single
+governed source of truth feeds authentication through federation, revoking access is
+immediate and complete rather than leaving a forgotten account alive in some
+downstream system. Approaching identity from an offensive background makes the value
+concrete: these are the controls that take away the things an attacker reaches for
+first.
+
 ## Skills Demonstrated
 
 - Identity Governance and Administration (IGA) concepts and workflow
@@ -208,9 +242,6 @@ proving, over time, that the access is still warranted.
 - Access review and certification campaigns
 - Federation and single sign-on with an identity provider
 - Containerized deployment with Docker Compose and Infrastructure-as-Code practices
-
-These map directly to the identity governance and access-management domains of the
-Microsoft SC-300 (Identity and Access Administrator) certification.
 
 ## Tech Stack
 
