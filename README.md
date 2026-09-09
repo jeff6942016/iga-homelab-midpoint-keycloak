@@ -178,12 +178,12 @@ presents each user's access to a reviewer, who certifies what should remain and
 revokes what should not. Any access that fails review is removed automatically when
 the campaign closes.
 
-> **Why it matters:** Provisioning grants access; only review proves it is still
-> justified. Access reviews answer the auditor's hardest question, "does everyone
-> who holds this access still need it," and they are the control that catches
-> privilege creep, the slow accumulation of entitlements people keep long after the
-> reason for them is gone. Running a real review, with enforced revocation, is what
-> separates governing access over time from simply handing it out.
+**Why it matters:** Provisioning grants access; only review proves it is still
+justified. Access reviews answer the auditor's hardest question, "does everyone
+who holds this access still need it," and they are the control that catches
+privilege creep, the slow accumulation of entitlements people keep long after the
+reason for them is gone. Running a real review, with enforced revocation, is what
+separates governing access over time from simply handing it out.
 
 Each user's role assignment became a certification case for the reviewer to decide:
 
