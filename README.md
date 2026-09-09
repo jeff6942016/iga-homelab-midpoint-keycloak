@@ -74,7 +74,7 @@ from HR record to working login.
 
 | Stage | Evidence |
 |-------|----------|
-| Imported identities | ![Imported identities](./screenshots/03-imported-users.png) |
+| Imported identities | ![Imported identities](./screenshots/healthy-feed.png)  ![Imported identities](./screenshots/imported-users.png)  ![Imported identities](./screenshots/ada.png)|
 | Provisioned to directory | `./screenshots/04-ldap-account.png` |
 | Joiner / Mover / Leaver | `./screenshots/05-jml-lifecycle.png` |
 | Reconciliation (orphan detected) | `./screenshots/08-reconciliation.png` |
