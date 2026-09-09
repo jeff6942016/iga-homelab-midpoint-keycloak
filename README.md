@@ -74,7 +74,9 @@ from HR record to working login.
 
 | Stage | Evidence |
 |-------|----------|
-| Imported identities | ![Imported identities](./screenshots/healthy-feed.png)  ![Imported identities](./screenshots/imported-users.png)  ![Imported identities](./screenshots/ada.png)|
+| Imported identities | The HR feed is ingested by midPoint and each record becomes a governed user with
+its attributes mapped from the source. ![Imported identities](./screenshots/healthy-feed.png)  ![Imported identities](./screenshots/imported-users.png)  ![Imported identities](./screenshots/ada.png) Given name, family name, title, and organizational unit are populated directly
+from the CSV, and the account is linked (Accounts: 1).|
 | Provisioned to directory | `./screenshots/04-ldap-account.png` |
 | Joiner / Mover / Leaver | `./screenshots/05-jml-lifecycle.png` |
 | Reconciliation (orphan detected) | `./screenshots/08-reconciliation.png` |
