@@ -128,10 +128,56 @@ access audits. Manual offboarding is slow and easy to forget; tying deactivation
 to the authoritative source means access ends when employment ends, not days later
 when someone happens to remember.
 
-![Joiner, mover, and leaver reflected in the directory](./screenshots/jml-lifecycle.png)
+![Joiner reflected in the directory](./screenshots/joiner.png)
+**Added a new user (Account: 1003) to simulate a joiner**
+![Mover reflected in the directory](./screenshots/mover.png)
+**User Ada now moved from Developer to Senior Developer**
+![Leaver reflected in the directory](./screenshots/leaver.png)
+**User Account 1002 now disabled, simulated as leaver**
 
-One change at the source (a new row, a changed department, a deactivation)
+One change at the source (a new row, a changed title and a deactivation)
 propagates automatically to the account's real state.
+
+### 3.1 Making it hands-off
+
+The three events above were demonstrated step by step, but in production the
+lifecycle runs with no manual intervention. Two mechanisms make it automatic.
+
+**A scheduled import** re-reads the authoritative source on a fixed interval, so any
+change in the HR feed (a new hire, a title change, a departure) is ingested on its
+own without anyone triggering it.
+
+![Scheduled import running on a recurring interval](./screenshots/recurring_task.png)
+
+**An auto-assignment rule** on the LDAP Account role grants directory access to any
+active user and removes it from anyone disabled. Access follows user status
+automatically, with no administrator assigning or revoking the role by hand:
+
+```xml
+<autoassign>
+    <enabled>true</enabled>
+    <focus>
+        <mapping>
+            <condition>
+                <script>
+                    <code>focus?.activation?.effectiveStatus?.toString() == 'ENABLED'</code>
+                </script>
+            </condition>
+        </mapping>
+    </focus>
+</autoassign>
+```
+
+The condition evaluates each user's effective status: an enabled user is granted the
+role and provisioned into the directory, while a disabled user loses the role and is
+deprovisioned. Combined with the scheduled import, editing a single row in the
+source feed is enough to create, modify, or disable a downstream account end to end.
+
+**Why it matters:** Manual provisioning does not scale, and it reintroduces the
+exact risks governance exists to prevent: slow offboarding, forgotten accounts, and
+access granted inconsistently. Automating the lifecycle is what makes least
+privilege and timely deprovisioning hold across thousands of identities, rather than
+depending on someone remembering to act.
 
 ### 4. Reconciliation and orphaned-account detection
 
