@@ -111,8 +111,8 @@ carries a reason. It is also the foundation for segregation of duties, since
 conflicting roles can be defined and blocked before they are ever granted.
 
 ![LDAP Directory Healthy](./screenshots/ldap_healthy.png)
-![Account provisioned to the directory via role assignment](./screenshots/provisioned-to-ldap.png)
-![Account provisioned to the directory via role assignment2](./screenshots/provisioned-to-ldap2.png)
+![Account provisioned to the directory via role assignment](./screenshots/provisioned_to_ldap.png)
+![Account provisioned to the directory via role assignment2](./screenshots/provisioned_to_ldap2.png)
 
 The account appears in the directory only because a role was assigned in midPoint,
 not because it was created manually.
