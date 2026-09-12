@@ -168,24 +168,52 @@ depending on someone remembering to act.
 
 ### 4. Reconciliation and orphaned-account detection
 
-An account is created directly in the directory, bypassing midPoint entirely, to
-simulate an unauthorized or leftover account. Reconciliation detects it as
-unmatched and flags it for remediation.
+An account (`uid=9999`) is created directly in the directory, bypassing midPoint
+entirely, to simulate an unauthorized or leftover account. Reconciliation compares
+the directory against the authoritative source, finds this account has no owner,
+and classifies it as unmatched.
 
 **Why it matters:** This is the control with no equivalent in basic account
 management, and the clearest proof of governance. An orphaned or rogue account is
 standing access that no authoritative source ever approved: created out of band,
-left behind after a departure, or never cleaned up. It is a classic persistence
-and privilege-escalation path for an attacker and a classic audit failure.
-Reconciliation catches it by periodically comparing the directory's actual state
-against the governed source of truth, so any account without a legitimate owner is
-surfaced rather than sitting unnoticed. This is the difference between managing
-accounts and governing access.
+left behind after a departure, or never cleaned up. It is a classic persistence and
+privilege-escalation path for an attacker and a classic audit failure.
+Reconciliation catches it by comparing the directory's actual state against the
+governed source of truth, so any account without a legitimate owner is surfaced
+rather than sitting unnoticed. This is the difference between managing accounts and
+governing access.
 
-![Reconciliation flags the unauthorized account](./screenshots/reconciliation.png)
+![Reconciliation detects the unmatched account](./screenshots/reconciliation-before.png)
 
-midPoint identifies the account as having no owner in the source of truth and marks
-it for remediation.
+The legitimate accounts (1001, 1002, 1003) are LINKED to their owners, while
+`uid=9999` stands out with no owner in the source of truth.
+
+![The unauthorized account removed on remediation](./screenshots/reconciliation-after.png)
+
+After remediation, the rogue account is gone and only owned, governed accounts
+remain.
+
+### 4.1 Automated, self-policing reconciliation
+
+Detection and cleanup do not depend on anyone watching. A reconciliation task runs
+on a recurring schedule, so the directory is continuously checked against the
+authoritative source without manual intervention.
+
+![Reconciliation task on a recurring 5-minute schedule](./screenshots/reconcile-task.png)
+
+![The unmatched reaction: delete any account with no owner](./screenshots/reaction.png)
+
+The reaction is explicit: any account whose situation is Unmatched triggers "Delete
+resource object," so an account with no owner in the source of truth is removed
+automatically on the next reconciliation run.
+
+**A note on judgment:** this lab hard-deletes unmatched accounts to make the control
+visible. In production the safer pattern is usually to disable and flag for review
+rather than delete outright, since a legitimate account that temporarily loses its
+link should not be destroyed. The right reaction depends on how much trust is placed
+in the authoritative source. Reconciliation is a periodic sweep, not a real-time
+trigger, so removal happens on the next scheduled run, not the instant a rogue
+account appears.
 
 ### 5. Single sign-on federation
 
