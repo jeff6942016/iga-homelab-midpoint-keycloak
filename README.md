@@ -114,8 +114,7 @@ conflicting roles can be defined and blocked before they are ever granted.
 ![Account provisioned to the directory via role assignment](./screenshots/provisioned_to_ldap.png)
 ![Account provisioned to the directory via role assignment2](./screenshots/provisioned_to_ldap2.png)
 
-The account appears in the directory only because a role was assigned in midPoint,
-not because it was created manually.
+Assigning the LDAP Account role in midPoint automatically provisioned a matching account in the directory. The Projections view shows the account as a midPoint-managed projection of Ada's identity, not a standalone entry, and its DN and attributes were constructed by the role's mappings rather than entered by hand.
 
 ### 3. Joiner, Mover, Leaver lifecycle
 
