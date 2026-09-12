@@ -188,7 +188,7 @@ governing access.
 The legitimate accounts (1001, 1002, 1003) are LINKED to their owners, while
 `uid=9999` stands out with no owner in the source of truth.
 
-![The unauthorized account removed on remediation](./screenshots/r-user_remove.png)
+![The unauthorized account removed on remediation](./screenshots/r-user_removed.png)
 
 After remediation, the rogue account is gone and only owned, governed accounts
 remain.
