@@ -183,12 +183,12 @@ governed source of truth, so any account without a legitimate owner is surfaced
 rather than sitting unnoticed. This is the difference between managing accounts and
 governing access.
 
-![Reconciliation detects the unmatched account](./screenshots/reconciliation-before.png)
+![Reconciliation detects the unmatched account](./screenshots/rogue-user.png)
 
 The legitimate accounts (1001, 1002, 1003) are LINKED to their owners, while
 `uid=9999` stands out with no owner in the source of truth.
 
-![The unauthorized account removed on remediation](./screenshots/reconciliation-after.png)
+![The unauthorized account removed on remediation](./screenshots/r-user_remove.png)
 
 After remediation, the rogue account is gone and only owned, governed accounts
 remain.
