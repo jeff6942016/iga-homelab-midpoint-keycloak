@@ -153,20 +153,7 @@ own without anyone triggering it.
 active user and removes it from anyone disabled. Access follows user status
 automatically, with no administrator assigning or revoking the role by hand:
 
-```xml
-<autoassign>
-    <enabled>true</enabled>
-    <focus>
-        <mapping>
-            <condition>
-                <script>
-                    <code>focus?.activation?.effectiveStatus?.toString() == 'ENABLED'</code>
-                </script>
-            </condition>
-        </mapping>
-    </focus>
-</autoassign>
-```
+![Auto assign rule](./screenshots/autoassign.png)
 
 The condition evaluates each user's effective status: an enabled user is granted the
 role and provisioned into the directory, while a disabled user loses the role and is
