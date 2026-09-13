@@ -256,27 +256,38 @@ revokes what should not. Any access that fails review is removed automatically w
 the campaign closes.
 
 **Why it matters:** Provisioning grants access; only review proves it is still
-justified. Access reviews answer the auditor's hardest question, "does everyone
-who holds this access still need it," and they are the control that catches
-privilege creep, the slow accumulation of entitlements people keep long after the
-reason for them is gone. Running a real review, with enforced revocation, is what
-separates governing access over time from simply handing it out.
+justified. Access reviews answer the auditor's hardest question, "does everyone who
+holds this access still need it," and they are the control that catches privilege
+creep, the slow accumulation of entitlements people keep long after the reason for
+them is gone. Running a real review, with enforced revocation, is what separates
+governing access over time from simply handing it out.
 
 Each user's role assignment became a certification case for the reviewer to decide:
 
 | User | Access reviewed | Decision | Result |
 |------|-----------------|----------|--------|
-| Ada Lovelace | Engineering role | Accept | Access retained |
-| Alan Turing | Security role | Revoke | Access removed on remediation |
+| Ada Lovelace (1001) | LDAP Account role | Accept | Access retained |
+| Grace Hopper (1003) | LDAP Account role | Accept | Access retained |
+| Alan Turing (1002) | LDAP Account role | Revoke | Access removed on remediation |
 
-![Access certification campaign with review decisions](./screenshots/access-review.png)
+![Access certification campaign with review decisions](./screenshots/access-review-decisions.png)
 
-The revoked assignment is deprovisioned automatically when the campaign closes, so
-the review is an enforced control rather than a paperwork exercise. This is the
-capability that lives in dedicated GRC platforms, reproduced here on open-source
-tooling.
+The reviewer accepted the access of the two active users and revoked the departed
+user's, producing a campaign outcome of 5 accepted and 1 revoked across all cases.
 
----
+![Campaign closed, with the revocation enforced](./screenshots/access-review-remediated.png)
+
+On close, midPoint's "Remediated items" confirms the revocation was enforced, not
+just recorded: the revoked assignment is removed and the corresponding directory
+account is deprovisioned. The review is an enforced control, not a paperwork
+exercise. This is the capability that lives in dedicated GRC platforms, reproduced
+here on open-source tooling.
+
+![The directory after remediation: the revoked account is gone](./screenshots/access-review-ldap-after.png)
+
+The directory reflects the decision directly: `ou=people` drops from three accounts
+to two, with the revoked user's entry removed entirely, while the accepted users
+remain.
 
 ## Key Concepts Demonstrated
 
@@ -293,21 +304,25 @@ proving, over time, that the access is still warranted.
 ## Defensive Value
 
 Identity governance is a defensive control set, and each stage of this pipeline
-closes a specific attack path. Orphaned and dormant accounts are among the most
-reliable footholds an attacker has, offering persistence and a route for lateral
-movement through access nobody is watching; reconciliation removes them by
-continuously comparing the directory against the source of truth. Excessive standing
-entitlements are what turn a single compromised account into a breach, since
-privilege escalation depends on there being privilege to seize; role-based least
-privilege and access review keep that surface small and force it to be re-justified
-over time. Slow deprovisioning leaves valid credentials in the hands of departed
-staff, one of the classic insider and credential-reuse risks; automated
-joiner-mover-leaver ends access the moment employment does. And because a single
-governed source of truth feeds authentication through federation, revoking access is
-immediate and complete rather than leaving a forgotten account alive in some
-downstream system. Approaching identity from an offensive background makes the value
-concrete: these are the controls that take away the things an attacker reaches for
-first.
+closes a specific attack path.
+
+- **Orphaned and dormant accounts** are among the most reliable footholds an
+  attacker has, offering persistence and a route for lateral movement through access
+  nobody is watching. Reconciliation removes them by continuously comparing the
+  directory against the source of truth.
+- **Excessive standing entitlements** turn a single compromised account into a
+  breach, since privilege escalation depends on there being privilege to seize.
+  Role-based least privilege and access review keep that surface small and force it
+  to be re-justified over time.
+- **Slow deprovisioning** leaves valid credentials in the hands of departed staff,
+  one of the classic insider and credential-reuse risks. Automated
+  joiner-mover-leaver ends access the moment employment does.
+- **Downstream persistence** is prevented because a single governed source of truth
+  feeds authentication through federation, so revoking access is immediate and
+  complete rather than leaving a forgotten account alive in some downstream system.
+
+Approaching identity from an offensive background makes the value concrete: these
+are the controls that take away the things an attacker reaches for first.
 
 ## Skills Demonstrated
 
@@ -315,9 +330,9 @@ first.
 - Identity lifecycle automation (joiner, mover, leaver)
 - Role-based access control design
 - Directory services (LDAP schema, object classes, bind and search)
-- Account reconciliation and orphaned-access detection
+- Account reconciliation and orphaned-access detection, with automated remediation
 - Access review and certification campaigns
-- Federation and single sign-on with an identity provider
+- Federation and single sign-on with a read-only, governance-owned directory
 - Containerized deployment with Docker Compose and Infrastructure-as-Code practices
 
 ## Tech Stack
@@ -329,19 +344,20 @@ Keycloak.
 
 A few things this build taught me beyond the happy path: the target directory does
 not create organizational units for you, so provisioning fails until the structure
-is seeded first; bootstrap configuration only applies to a fresh data volume, which
-matters when iterating; a named volume mounted over a directory hides bind-mounted
-files beneath it, which is why the CSV had to live outside the persistent path; and
-an import task reports success but creates nothing unless a synchronization reaction
-tells it to. Working through these is the operational side of identity work, not
-just the theory.
+exists; the osixia LDAP image fights any attempt to seed its bootstrap folder
+through a mount, so the cleaner path was to let it initialize untouched and create
+the organizational unit directly afterward; a named volume mounted over a directory
+hides bind-mounted files beneath it, which is why the CSV had to live outside the
+persistent path; and an import task reports success but creates nothing unless a
+synchronization reaction tells it to. Working through these is the operational side
+of identity work, not just the theory.
 
 ## Roadmap
 
 - Over-privilege reporting against a least-privilege baseline
 - A written governance report summarizing review findings
 - Segregation-of-duties policy enforcement
-
+  
 ## About
 
 Built by Jeffrey Lam-Ping-Fong, a fourth-year Honours Bachelor of Information
