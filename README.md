@@ -219,19 +219,28 @@ account appears.
 
 Keycloak federates the provisioned directory as an identity provider, so a user who
 was governed and provisioned from the original HR record can authenticate through
-single sign-on.
+single sign-on. Keycloak is configured READ_ONLY against the directory: it consumes
+the accounts midPoint governs, but never writes to them.
 
 **Why it matters:** Federation separates the governance of identity from the
 authentication of it. midPoint decides who should have access and provisions it;
-Keycloak consumes that governed directory to broker logins to applications. This is
-the modern identity architecture in miniature: one governed source of truth feeds a
-central identity provider, so access granted by governance immediately becomes a
-usable login, and access revoked by governance immediately stops working.
+Keycloak consumes that governed directory to broker logins to applications, without
+becoming a second, ungoverned source of accounts. This is the modern identity
+architecture in miniature: one governed source of truth feeds a central identity
+provider, so access granted by governance immediately becomes a usable login, and
+access revoked by governance immediately stops working.
 
-![Federated user authenticating through Keycloak](./screenshots/keycloak-sso.png)
+![Directory users federated into Keycloak](./screenshots/keycloak-users.png)
 
-The login works because the account was provisioned upstream by governance, closing
-the loop from HR record to working access.
+The users (1001, 1002, 1003) are not created in Keycloak; they are federated
+directly from the OpenLDAP directory that midPoint provisioned.
+
+![A federated user authenticating through single sign-on](./screenshots/keycloak-login.png)
+
+Logging in as a provisioned user succeeds because the account was created upstream by
+governance. This closes the loop from HR record to governed identity to directory
+account to working login, and, just as importantly, an account that governance
+disables or removes can no longer authenticate here.
 
 ### 6. Access review and attestation
 
