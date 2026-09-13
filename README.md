@@ -295,6 +295,17 @@ See the exported report: [certification cases report](./reports/certification-ca
 > never be published; it is included here only because the data is fabricated for
 > demonstration.
 
+
+| Object | Target | Reviewer | Reviewed on | Decision | Remediated |
+|--------|--------|----------|-------------|----------|------------|
+| User: 1001 | Role: LDAP Account | administrator | 9/13/26 | Accept | — |
+| User: 1002 | Role: LDAP Account | administrator | 9/13/26 | **Revoke** | 9/13/26 |
+| User: 1003 | Role: LDAP Account | administrator | 9/13/26 | Accept | — |
+| Role: LDAP Account | Resource: OpenLDAP Directory | administrator | 9/13/26 | Accept | — |
+| Role: Superuser | Policy: Privileged access | administrator | 9/13/26 | Accept | — |
+| User: administrator | Role: Superuser | administrator | 9/13/26 | Accept | — |
+
+
 ![The directory after remediation: the revoked account is gone](./screenshots/access-review-ldap-after.png)
 
 The directory reflects the decision directly: `ou=people` drops from three accounts
