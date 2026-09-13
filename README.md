@@ -283,11 +283,25 @@ account is deprovisioned. The review is an enforced control, not a paperwork
 exercise. This is the capability that lives in dedicated GRC platforms, reproduced
 here on open-source tooling.
 
+The campaign also produces an auditable certification report recording each case:
+the user, the access reviewed, the reviewer, the decision, and the timestamp. This
+is the audit evidence an access review exists to generate, the documented answer to
+"who reviewed this access, and what did they decide."
+
+See the exported report: [certification cases report](./reports/certification-cases-report.csv)
+
+> The identities in this lab (Ada, Alan, Grace) and all data are synthetic. In a
+> real environment a certification report contains real people's access and would
+> never be published; it is included here only because the data is fabricated for
+> demonstration.
+
 ![The directory after remediation: the revoked account is gone](./screenshots/access-review-ldap-after.png)
 
 The directory reflects the decision directly: `ou=people` drops from three accounts
 to two, with the revoked user's entry removed entirely, while the accepted users
 remain.
+
+
 
 ## Key Concepts Demonstrated
 
