@@ -1,0 +1,8 @@
+"Object";"Target";"Campaign";"Reviewers";"Last reviewed on";"Reviewed by";"Iteration";"In stage";"Outcome";"Comments";"Remedied on"
+"User: 1001";"Role: LDAP Account";"Quarterly User Access Review 3";"administrator";"9/13/26, 2:20 AM";"administrator";"1";"1";"Accept";"";""
+"User: 1002";"Role: LDAP Account";"Quarterly User Access Review 3";"administrator";"9/13/26, 2:20 AM";"administrator";"1";"1";"Revoke";"";"9/13/26, 2:23 AM"
+"User: 1003";"Role: LDAP Account";"Quarterly User Access Review 3";"administrator";"9/13/26, 2:20 AM";"administrator";"1";"1";"Accept";"";""
+"Role: LDAP Account";"Resource: OpenLDAP Directory";"Quarterly User Access Review 3";"administrator";"9/13/26, 2:20 AM";"administrator";"1";"1";"Accept";"";""
+"Role: Superuser";"Policy: Privileged access";"Quarterly User Access Review 3";"administrator";"9/13/26, 2:20 AM";"administrator";"1";"1";"Accept";"";""
+"User: administrator";"Role: Superuser";"Quarterly User Access Review 3";"administrator";"9/13/26, 2:20 AM";"administrator";"1";"1";"Accept";"";""
+No active subscription. Please support midPoint by purchasing a subscription.
