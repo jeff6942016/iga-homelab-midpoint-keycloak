@@ -230,6 +230,12 @@ architecture in miniature: one governed source of truth feeds a central identity
 provider, so access granted by governance immediately becomes a usable login, and
 access revoked by governance immediately stops working.
 
+![Keycloak LDAP federation configured against the directory (READ_ONLY)](./screenshots/keycloak-federation-config.png)
+
+Keycloak is connected to the OpenLDAP directory as a READ_ONLY federation source,
+pointing at the same `ou=people` container midPoint provisions into.
+
+
 ![Directory users federated into Keycloak](./screenshots/keycloak-users.png)
 
 The users (1001, 1002, 1003) are not created in Keycloak; they are federated
