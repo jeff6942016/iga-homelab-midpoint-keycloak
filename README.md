@@ -3,7 +3,8 @@
 > A fully open-source Identity Governance and Administration (IGA) environment
 > demonstrating the enterprise identity lifecycle end to end: authoritative-source
 > ingestion, role-based provisioning, joiner-mover-leaver automation,
-> orphaned-account reconciliation, single sign-on federation, and access review.
+> orphaned-account reconciliation, single sign-on federation, access review, and
+> segregation of duties.
 
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 ![midPoint](https://img.shields.io/badge/midPoint-IGA%20Engine-blue)
@@ -312,7 +313,52 @@ The directory reflects the decision directly: `ou=people` drops from three accou
 to two, with the revoked user's entry removed entirely, while the accepted users
 remain.
 
+### 7. Segregation of duties
 
+A policy rule defines two roles as mutually exclusive, so the same person cannot
+hold a toxic combination of access. The lab models the classic finance conflict:
+an **Invoice Requester** who can raise an invoice, and a **Payment Approver** who
+can approve payment. One person holding both can invoice a fake vendor and approve
+paying it, which is textbook fraud. The rule is demonstrated in both of its modes:
+detective, which records violations without blocking them, and preventive, which
+refuses the conflicting assignment outright.
+
+**Why it matters:** Segregation of duties is the control that stops power from
+concentrating in a single person. Review catches privilege creep after the fact;
+SoD prevents a specific, dangerous combination from ever being granted. The
+detective-then-preventive sequence mirrors how SoD is rolled out for real: you
+never switch on hard enforcement in a live directory full of existing violations,
+you first surface them, then harden once the population is clean. midPoint maps
+this control to **ISO/IEC 27001 Annex A 5.3 (Segregation of duties)**.
+
+The two conflicting roles exist as governed objects:
+
+![The two mutually exclusive roles](./screenshots/01-sod-roles.png)
+
+The exclusion is defined once, as a policy rule on the Payment Approver role. It
+references the conflicting role by name and, because the exclusion is bidirectional,
+it applies from either direction regardless of assignment order:
+
+![The SoD exclusion policy rule](./screenshots/02-sod-policy-rule.png)
+
+In detective mode (the `record` action), assigning both roles to one user succeeds
+but is flagged. After recompute, the Exclusion violation mark appears on both
+assignments, confirming the conflict is recognized from either side even though the
+rule was written only once:
+
+![Detective mode: the violation recorded on the user](./screenshots/03-sod-detective-violation.png)
+
+Switching the action to `enforcement` changes the same rule from recording to
+blocking. Assigning Invoice Requester and then attempting to add Payment Approver
+is now refused before anything is committed, with a clear message naming both roles
+and the reason:
+
+![Preventive mode: the conflicting assignment blocked](./screenshots/04-sod-enforcement-block.png)
+
+Both change panels read zero objects: the assignment was rejected outright, not
+partially applied. The same policy rule produced two behaviours, silent recording
+and hard blocking, by changing only the policy action, which is the mechanism that
+makes phased SoD rollout possible.
 
 ## Key Concepts Demonstrated
 
@@ -339,6 +385,10 @@ closes a specific attack path.
   breach, since privilege escalation depends on there being privilege to seize.
   Role-based least privilege and access review keep that surface small and force it
   to be re-justified over time.
+- **Toxic access combinations** let one person both initiate and approve a sensitive
+  action, removing the second pair of eyes that would otherwise catch fraud or
+  error. Segregation-of-duties enforcement blocks those combinations before they are
+  ever granted.
 - **Slow deprovisioning** leaves valid credentials in the hands of departed staff,
   one of the classic insider and credential-reuse risks. Automated
   joiner-mover-leaver ends access the moment employment does.
@@ -354,6 +404,7 @@ are the controls that take away the things an attacker reaches for first.
 - Identity Governance and Administration (IGA) concepts and workflow
 - Identity lifecycle automation (joiner, mover, leaver)
 - Role-based access control design
+- Segregation-of-duties policy design and phased enforcement
 - Directory services (LDAP schema, object classes, bind and search)
 - Account reconciliation and orphaned-access detection, with automated remediation
 - Access review and certification campaigns
@@ -381,8 +432,7 @@ of identity work, not just the theory.
 
 - Over-privilege reporting against a least-privilege baseline
 - A written governance report summarizing review findings
-- Segregation-of-duties policy enforcement
-  
+
 ## About
 
 Built by Jeffrey Lam-Ping-Fong, a fourth-year Honours Bachelor of Information
